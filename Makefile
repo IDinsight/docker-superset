@@ -1,9 +1,10 @@
-REPO             := amancevice/superset
+REPO             := superset
 PYTHON_VERSION   := 3.8
-SUPERSET_VERSION := 2.0.1
+SUPERSET_VERSION := 2.1.0rc3
 
 build: requirements-dev.txt
 	docker build \
+	--platform linux/amd64 \
 	--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
 	--build-arg SUPERSET_VERSION=$(SUPERSET_VERSION) \
 	--tag $(REPO) \
@@ -22,7 +23,8 @@ edge: requirements-dev.txt
 	.
 
 push:
-	docker push --all-tags $(REPO)
+	docker tag $(REPO):$(SUPERSET_VERSION) ghcr.io/idinsight/$(REPO):$(SUPERSET_VERSION)
+	docker push ghcr.io/idinsight/$(REPO):$(SUPERSET_VERSION)
 
 .PHONY: build clean demo edge push
 
